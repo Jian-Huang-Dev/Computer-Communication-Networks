@@ -73,22 +73,7 @@ end_packet_transmission_event(Simulation_Run_Ptr simulation_run, void* ptr)
    * Packet transmission is finished. Take the packet off the data link.
    */
 
-  this_packet = (Packet_Ptr) ptr;
-  
-  if(this_packet->packet_link == 1){
-	this_packet = (Packet_Ptr) server_get(data->link);
-  }else{
-	this_packet = (Packet_Ptr) server_get(data->link2);
-  }
-
-/*
-  if(server_state(data->link) == BUSY){
-	this_packet = (Packet_Ptr) server_get(data->link);
-  }else{
-	this_packet = (Packet_Ptr) server_get(data->link2);
-  }
-*/
-
+  this_packet = (Packet_Ptr) server_get(data->link);
 
   /* Collect statistics. */
   data->number_of_packets_processed++;
@@ -127,18 +112,10 @@ start_packet_transmission(Simulation_Run_Ptr simulation_run,
 
   TRACE(printf("Start Of Packet.\n");)
 
-  if(server_state(data->link) == BUSY)
-  {
-	  server_put(data->link2, (void*) this_packet);
-	  this_packet->packet_link = 2;
-  }else{
-     server_put(data->link, (void*) this_packet);
-	 this_packet->packet_link = 1;
-  }
+  server_put(data->link, (void*) this_packet);
   this_packet->status = XMTTING;
 
-
-  /* Schedule the end2of packet transmission event. */
+  /* Schedule the end of packet transmission event. */
   schedule_end_packet_transmission_event(simulation_run,
 	 simulation_run_get_time(simulation_run) + this_packet->service_time,
 	 (void*) this_packet);

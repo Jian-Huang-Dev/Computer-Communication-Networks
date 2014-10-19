@@ -43,9 +43,7 @@
  * run for each. To start a run, it schedules the first packet arrival
  * event. When each run is finished, output is printed on the terminal.
  */
-int counter;
-double delay;
- 
+
 int
 main(void)
 {

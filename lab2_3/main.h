@@ -32,8 +32,6 @@
 #include "simparameters.h"
 
 /******************************************************************************/
-extern int counter;
-extern double delay;
 
 typedef struct _simulation_run_data_ 
 {

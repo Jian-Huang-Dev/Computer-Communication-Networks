@@ -27,15 +27,14 @@
 #define _SIMPARAMETERS_H_
 
 /******************************************************************************/
-// arrival rate 0 < lamda < 1000, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950
-#define PACKET_ARRIVAL_RATE 950 /* packets per second */
+
+#define PACKET_ARRIVAL_RATE 100 /* packets per second */
 #define PACKET_LENGTH 1e3 /* bits */
 #define LINK_BIT_RATE 1e6 /* bits per second */
 #define RUNLENGTH 10e6 /* packets */
 
 /* Comma separated list of random seeds to run. */
-#define RANDOM_SEED_LIST 123456,234567,345678,456789,5678901,6789123,7891234,8912345,1061556,1069639
-
+#define RANDOM_SEED_LIST 1, 22, 333
 
 #define PACKET_XMT_TIME ((double) PACKET_LENGTH/LINK_BIT_RATE)
 #define BLIPRATE (RUNLENGTH/1000)
