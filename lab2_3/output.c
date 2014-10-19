@@ -92,6 +92,9 @@ output_results(Simulation_Run_Ptr simulation_run)
   printf("Mean Delay (msec) = %.2f \n",
 	 1e3*data->accumulated_delay/data->number_of_packets_processed);
 
+  printf("Probability = %.2f%% \n", (double)counter/data->number_of_packets_processed*100.0);
+  // re-initialize counter value
+  counter = 0;
   printf("\n");
 }
 
