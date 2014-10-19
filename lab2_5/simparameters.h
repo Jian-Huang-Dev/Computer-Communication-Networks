@@ -27,16 +27,24 @@
 #define _SIMPARAMETERS_H_
 
 /******************************************************************************/
-
-#define PACKET_ARRIVAL_RATE 100 /* packets per second */
+//arrival rate 0 < lamda < 50: 5, 10, 20, 30, 40, 45
+#define PACKET_ARRIVAL_RATE 45 /* packets per second */
 #define PACKET_LENGTH 1e3 /* bits */
 #define LINK_BIT_RATE 1e6 /* bits per second */
 #define RUNLENGTH 10e6 /* packets */
 
+#define VOICE_ARRIVAL_TIME 20e-3
+#define VOICE_2_ARRIVAL_TIME 40e-3
+#define VOICE_PACKET_LENGTH 1.776e3
+#define VOICE_2_PACKET_LENGTH 3.056e3
+#define MEAN_SERVICE_TIME 20e-3
+
 /* Comma separated list of random seeds to run. */
-#define RANDOM_SEED_LIST 1, 22, 333
+#define RANDOM_SEED_LIST 123456,234567,345678,456789,5678901,6789123,7891234,8912345,1061556,1069639
 
 #define PACKET_XMT_TIME ((double) PACKET_LENGTH/LINK_BIT_RATE)
+#define VOICE_XMT_TIME ((double) VOICE_PACKET_LENGTH/LINK_BIT_RATE)
+#define VOICE_2_XMT_TIME ((double) VOICE_2_PACKET_LENGTH/LINK_BIT_RATE)
 #define BLIPRATE (RUNLENGTH/1000)
 
 /******************************************************************************/

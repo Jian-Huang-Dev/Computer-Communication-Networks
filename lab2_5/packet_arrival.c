@@ -51,6 +51,30 @@ schedule_packet_arrival_event(Simulation_Run_Ptr simulation_run,
   return event_id;
 }
 
+long int
+schedule_voice_packet_arrival_event(Simulation_Run_Ptr simulation_run,
+			      double event_time)
+{
+  Event_Type this_event = {"Voice Stream 1 Packet Arrival", voice_packet_arrival_event};
+  long int event_id;
+
+  event_id = 
+    simulation_run_schedule_event(simulation_run, this_event, event_time,
+				  (void*) NULL);
+  return event_id;
+}
+long int
+schedule_voice_2_packet_arrival_event(Simulation_Run_Ptr simulation_run,
+			      double event_time)
+{
+  Event_Type this_event = {"Voice Stream 2 Packet Arrival", voice_2_packet_arrival_event};
+  long int event_id;
+
+  event_id = 
+    simulation_run_schedule_event(simulation_run, this_event, event_time,
+				  (void*) NULL);
+  return event_id;
+}
 /******************************************************************************/
 
 /*
@@ -71,8 +95,9 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void* ptr)
 
   new_packet = (Packet_Ptr) xmalloc(sizeof(Packet));
   new_packet->arrive_time = simulation_run_get_time(simulation_run);
-  new_packet->service_time = get_packet_transmission_time();
+  new_packet->service_time = exponential_generator((double) MEAN_SERVICE_TIME);
   new_packet->status = WAITING;
+  new_packet->packet_type = DATA;
 
   /* 
    * Start transmission if the data link is free. Otherwise put the packet into
@@ -93,6 +118,76 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void* ptr)
   schedule_packet_arrival_event(simulation_run,
 			simulation_run_get_time(simulation_run) +
 			exponential_generator((double) 1/PACKET_ARRIVAL_RATE));
+}
+
+void
+voice_packet_arrival_event(Simulation_Run_Ptr simulation_run, void* ptr)
+{
+  Simulation_Run_Data_Ptr data;
+  Packet_Ptr new_packet;
+
+  data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
+  data->arrival_count++;
+
+  new_packet = (Packet_Ptr) xmalloc(sizeof(Packet));
+  new_packet->arrive_time = simulation_run_get_time(simulation_run);
+  new_packet->service_time = get_voice_packet_transmission_time();
+  new_packet->status = WAITING;
+  new_packet->packet_type = VOICE;
+
+  /* 
+   * Start transmission if the data link is free. Otherwise put the packet into
+   * the buffer.
+   */
+
+  if(server_state(data->link) == BUSY) {
+    fifoqueue_put(data->buffer, (void*) new_packet);
+  } else {
+    start_packet_transmission(simulation_run, new_packet);
+  }
+
+  /* 
+   * Schedule the next packet arrival. Independent, exponentially distributed
+   * interarrival times gives us Poisson process arrivals.
+   */
+
+  schedule_voice_packet_arrival_event(simulation_run,
+			simulation_run_get_time(simulation_run) + VOICE_ARRIVAL_TIME);
+}
+
+void
+voice_2_packet_arrival_event(Simulation_Run_Ptr simulation_run, void* ptr)
+{
+  Simulation_Run_Data_Ptr data;
+  Packet_Ptr new_packet;
+
+  data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
+  data->arrival_count++;
+
+  new_packet = (Packet_Ptr) xmalloc(sizeof(Packet));
+  new_packet->arrive_time = simulation_run_get_time(simulation_run);
+  new_packet->service_time = get_voice_2_packet_transmission_time();
+  new_packet->status = WAITING;
+  new_packet->packet_type = VOICE_2;
+
+  /* 
+   * Start transmission if the data link is free. Otherwise put the packet into
+   * the buffer.
+   */
+
+  if(server_state(data->link) == BUSY) {
+    fifoqueue_put(data->buffer, (void*) new_packet);
+  } else {
+    start_packet_transmission(simulation_run, new_packet);
+  }
+
+  /* 
+   * Schedule the next packet arrival. Independent, exponentially distributed
+   * interarrival times gives us Poisson process arrivals.
+   */
+
+  schedule_voice_2_packet_arrival_event(simulation_run,
+			simulation_run_get_time(simulation_run) + VOICE_2_ARRIVAL_TIME);
 }
 
 

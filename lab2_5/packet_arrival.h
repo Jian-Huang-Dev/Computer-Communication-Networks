@@ -39,8 +39,20 @@
 void
 packet_arrival_event(Simulation_Run_Ptr, void*);
 
+void
+voice_packet_arrival_event(Simulation_Run_Ptr simulation_run, void* ptr);
+
+void
+voice_2_packet_arrival_event(Simulation_Run_Ptr simulation_run, void* ptr);
+
 long
 schedule_packet_arrival_event(Simulation_Run_Ptr, double);
+
+long 
+schedule_voice_packet_arrival_event(Simulation_Run_Ptr, double);
+
+long 
+schedule_voice_2_packet_arrival_event(Simulation_Run_Ptr, double);
 
 /******************************************************************************/
 

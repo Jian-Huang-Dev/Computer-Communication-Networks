@@ -87,6 +87,13 @@ main(void)
     data->accumulated_delay = 0.0;
     data->random_seed = random_seed;
  
+	data->number_of_data_packets_processed = 0;
+	data->number_of_voice_packets_processed = 0;
+	data->number_of_voice_2_packets_processed = 0;
+	data->data_packet_accumulated_delay = 0.0;
+    data->voice_packet_accumulated_delay = 0.0;
+	data->voice_2_packet_accumulated_delay = 0.0;
+
     /* 
      * Create the packet buffer and transmission link, declared in main.h.
      */
@@ -105,6 +112,12 @@ main(void)
      */
 
     schedule_packet_arrival_event(simulation_run, 
+				  simulation_run_get_time(simulation_run));
+
+	schedule_voice_packet_arrival_event(simulation_run, 
+				  simulation_run_get_time(simulation_run));
+
+    schedule_voice_2_packet_arrival_event(simulation_run, 
 				  simulation_run_get_time(simulation_run));
 
     /* 

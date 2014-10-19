@@ -76,7 +76,22 @@ end_packet_transmission_event(Simulation_Run_Ptr simulation_run, void* ptr)
   this_packet = (Packet_Ptr) server_get(data->link);
 
   /* Collect statistics. */
-  data->number_of_packets_processed++;
+  data->number_of_packets_processed++;// total packets transmitted
+  
+  // different packet type has different delay and accumulated delay
+  if(this_packet->packet_type == DATA){
+	  data->number_of_data_packets_processed++;
+	  data->data_packet_accumulated_delay += simulation_run_get_time(simulation_run) - this_packet->arrive_time;
+  }
+  else if (this_packet->packet_type == VOICE){
+	data->number_of_voice_packets_processed++;
+	data->voice_packet_accumulated_delay += simulation_run_get_time(simulation_run) - this_packet->arrive_time;
+  }
+  else{//VOICE_2
+	  data->number_of_voice_2_packets_processed++;
+	  data->voice_2_packet_accumulated_delay += simulation_run_get_time(simulation_run) - this_packet->arrive_time;
+  }
+
   data->accumulated_delay += simulation_run_get_time(simulation_run) - 
     this_packet->arrive_time;
 
@@ -116,10 +131,10 @@ start_packet_transmission(Simulation_Run_Ptr simulation_run,
   this_packet->status = XMTTING;
 
   /* Schedule the end of packet transmission event. */
-  schedule_end_packet_transmission_event(simulation_run,
-	 simulation_run_get_time(simulation_run) + this_packet->service_time,
-	 (void*) this_packet);
-}
+	  schedule_end_packet_transmission_event(simulation_run,
+		 simulation_run_get_time(simulation_run) + this_packet->service_time,
+		 (void*) this_packet);
+  }
 
 /*
  * Get a packet transmission time. For now it is a fixed value defined in
@@ -131,5 +146,17 @@ get_packet_transmission_time(void)
 {
   return ((double) PACKET_XMT_TIME);
 }
+
+double
+get_voice_packet_transmission_time(void)
+{
+  return ((double) VOICE_XMT_TIME);
+}
+double
+get_voice_2_packet_transmission_time(void)
+{
+  return ((double) VOICE_2_XMT_TIME);
+}
+
 
 
