@@ -86,20 +86,23 @@ main(void)
     data->number_of_packets_processed = 0;
     data->accumulated_delay = 0.0;
     data->random_seed = random_seed;
- 
+
 	data->number_of_data_packets_processed = 0;
 	data->number_of_voice_packets_processed = 0;
 	data->number_of_voice_2_packets_processed = 0;
 	data->data_packet_accumulated_delay = 0.0;
-    data->voice_packet_accumulated_delay = 0.0;
+	data->voice_packet_accumulated_delay = 0.0;
 	data->voice_2_packet_accumulated_delay = 0.0;
 
-    /* 
+	/* 
      * Create the packet buffer and transmission link, declared in main.h.
      */
 
     data->buffer = fifoqueue_new();
-    data->link   = server_new();
+	data->voice_buffer = fifoqueue_new();
+	data->link = server_new();
+
+
 
     /* 
      * Set the random number generator seed for this run.
@@ -111,22 +114,24 @@ main(void)
      * Schedule the initial packet arrival for the current clock time (= 0).
      */
 
-    schedule_packet_arrival_event(simulation_run, 
-				  simulation_run_get_time(simulation_run));
-
 	schedule_voice_packet_arrival_event(simulation_run, 
 				  simulation_run_get_time(simulation_run));
 
     schedule_voice_2_packet_arrival_event(simulation_run, 
 				  simulation_run_get_time(simulation_run));
 
+	schedule_packet_arrival_event(simulation_run, 
+				  simulation_run_get_time(simulation_run));
+
+
     /* 
      * Execute events until we are finished. 
      */
-
-    while(data->number_of_packets_processed < RUNLENGTH) {
+	// accumulated number of packets < RUNLENGTH
+	while(data->number_of_data_packets_processed + data->number_of_voice_packets_processed + data->number_of_voice_2_packets_processed < RUNLENGTH) {
       simulation_run_execute_event(simulation_run);
     }
+
 
     /*
      * Output results and clean up after ourselves.

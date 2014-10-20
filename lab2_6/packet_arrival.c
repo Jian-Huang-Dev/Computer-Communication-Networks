@@ -63,10 +63,12 @@ schedule_voice_packet_arrival_event(Simulation_Run_Ptr simulation_run,
 				  (void*) NULL);
   return event_id;
 }
+
 long int
 schedule_voice_2_packet_arrival_event(Simulation_Run_Ptr simulation_run,
 			      double event_time)
 {
+	
   Event_Type this_event = {"Voice Stream 2 Packet Arrival", voice_2_packet_arrival_event};
   long int event_id;
 
@@ -75,6 +77,8 @@ schedule_voice_2_packet_arrival_event(Simulation_Run_Ptr simulation_run,
 				  (void*) NULL);
   return event_id;
 }
+
+
 /******************************************************************************/
 
 /*
@@ -98,7 +102,6 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void* ptr)
   new_packet->service_time = exponential_generator((double) MEAN_SERVICE_TIME);
   new_packet->status = WAITING;
   new_packet->packet_type = DATA;
-
   /* 
    * Start transmission if the data link is free. Otherwise put the packet into
    * the buffer.
@@ -107,7 +110,10 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void* ptr)
   if(server_state(data->link) == BUSY) {
     fifoqueue_put(data->buffer, (void*) new_packet);
   } else {
-    start_packet_transmission(simulation_run, new_packet);
+	  // only start transmitting the packet data 
+	  // if there is no voice packets remain in the voice_buffer
+    if(fifoqueue_size(data->voice_buffer) == 0)
+		start_packet_transmission(simulation_run, new_packet);
   }
 
   /* 
@@ -141,7 +147,7 @@ voice_packet_arrival_event(Simulation_Run_Ptr simulation_run, void* ptr)
    */
 
   if(server_state(data->link) == BUSY) {
-    fifoqueue_put(data->buffer, (void*) new_packet);
+    fifoqueue_put(data->voice_buffer, (void*) new_packet);
   } else {
     start_packet_transmission(simulation_run, new_packet);
   }
@@ -152,7 +158,8 @@ voice_packet_arrival_event(Simulation_Run_Ptr simulation_run, void* ptr)
    */
 
   schedule_voice_packet_arrival_event(simulation_run,
-			simulation_run_get_time(simulation_run) + VOICE_ARRIVAL_TIME);
+			simulation_run_get_time(simulation_run) +
+			VOICE_ARRIVAL_TIME);
 }
 
 void
@@ -176,7 +183,7 @@ voice_2_packet_arrival_event(Simulation_Run_Ptr simulation_run, void* ptr)
    */
 
   if(server_state(data->link) == BUSY) {
-    fifoqueue_put(data->buffer, (void*) new_packet);
+    fifoqueue_put(data->voice_buffer, (void*) new_packet);
   } else {
     start_packet_transmission(simulation_run, new_packet);
   }
@@ -187,7 +194,8 @@ voice_2_packet_arrival_event(Simulation_Run_Ptr simulation_run, void* ptr)
    */
 
   schedule_voice_2_packet_arrival_event(simulation_run,
-			simulation_run_get_time(simulation_run) + VOICE_2_ARRIVAL_TIME);
+			simulation_run_get_time(simulation_run) +
+			VOICE_2_ARRIVAL_TIME);
 }
 
 

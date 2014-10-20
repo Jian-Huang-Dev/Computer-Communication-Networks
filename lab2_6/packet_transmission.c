@@ -76,22 +76,20 @@ end_packet_transmission_event(Simulation_Run_Ptr simulation_run, void* ptr)
   this_packet = (Packet_Ptr) server_get(data->link);
 
   /* Collect statistics. */
-  data->number_of_packets_processed++;// total packets transmitted
-  
+  // total number of packets processed
+  data->number_of_packets_processed++;
   // different packet type has different delay and accumulated delay
   if(this_packet->packet_type == DATA){
-	  data->number_of_data_packets_processed++;
-	  data->data_packet_accumulated_delay += simulation_run_get_time(simulation_run) - this_packet->arrive_time;
-  }
-  else if (this_packet->packet_type == VOICE){
+	data->number_of_data_packets_processed++;
+	data->data_packet_accumulated_delay += simulation_run_get_time(simulation_run) - this_packet->arrive_time;
+  }else if (this_packet->packet_type == VOICE){
 	data->number_of_voice_packets_processed++;
 	data->voice_packet_accumulated_delay += simulation_run_get_time(simulation_run) - this_packet->arrive_time;
-  }
-  else{//VOICE_2
+  }else{
 	  data->number_of_voice_2_packets_processed++;
-	  data->voice_2_packet_accumulated_delay += simulation_run_get_time(simulation_run) - this_packet->arrive_time;
+	  data->voice_2_packet_accumulated_delay += simulation_run_get_time(simulation_run) -  this_packet->arrive_time;
   }
-
+  
   data->accumulated_delay += simulation_run_get_time(simulation_run) - 
     this_packet->arrive_time;
 
@@ -106,8 +104,11 @@ end_packet_transmission_event(Simulation_Run_Ptr simulation_run, void* ptr)
    * out and transmit it immediately.
   */
 
-  if(fifoqueue_size(data->buffer) > 0) {
-    next_packet = (Packet_Ptr) fifoqueue_get(data->buffer);
+  if(fifoqueue_size(data->voice_buffer) > 0) {
+    next_packet = (Packet_Ptr) fifoqueue_get(data->voice_buffer);
+    start_packet_transmission(simulation_run, next_packet);
+  }else if(fifoqueue_size(data->buffer) > 0){
+	next_packet = (Packet_Ptr) fifoqueue_get(data->buffer);
     start_packet_transmission(simulation_run, next_packet);
   }
 }
@@ -130,11 +131,11 @@ start_packet_transmission(Simulation_Run_Ptr simulation_run,
   server_put(data->link, (void*) this_packet);
   this_packet->status = XMTTING;
 
+
   /* Schedule the end of packet transmission event. */
-	  schedule_end_packet_transmission_event(simulation_run,
-		 simulation_run_get_time(simulation_run) + this_packet->service_time,
-		 (void*) this_packet);
-  }
+	schedule_end_packet_transmission_event(simulation_run,
+		simulation_run_get_time(simulation_run) + this_packet->service_time,(void*) this_packet);
+}
 
 /*
  * Get a packet transmission time. For now it is a fixed value defined in
@@ -148,15 +149,11 @@ get_packet_transmission_time(void)
 }
 
 double
-get_voice_packet_transmission_time(void)
-{
-  return ((double) VOICE_XMT_TIME);
+get_voice_packet_transmission_time(void){
+	return ((double) VOICE_XMT_TIME);
 }
 double
-get_voice_2_packet_transmission_time(void)
-{
-  return ((double) VOICE_2_XMT_TIME);
+get_voice_2_packet_transmission_time(void){
+	return ((double) VOICE_2_XMT_TIME);
 }
-
-
 

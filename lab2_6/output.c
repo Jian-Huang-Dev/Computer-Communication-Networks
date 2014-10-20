@@ -79,13 +79,13 @@ output_results(Simulation_Run_Ptr simulation_run)
 
   printf("\n");
   printf("Random Seed = %d \n", data->random_seed);
- // printf("Packet arrival count = %ld \n", data->arrival_count);
+  printf("Packet arrival count = %ld \n", data->arrival_count);
 
   xmtted_fraction = (double) data->number_of_packets_processed /
     data->arrival_count;
 
- // printf("Transmitted packet count  = %ld (Service Fraction = %.5f)\n",
-	 //data->number_of_packets_processed, xmtted_fraction);
+  printf("Transmitted packet count  = %ld (Service Fraction = %.5f)\n",
+	 data->number_of_packets_processed, xmtted_fraction);
 
   printf("Arrival rate = %.3f packets/second \n", (double) PACKET_ARRIVAL_RATE);
 
@@ -93,14 +93,14 @@ output_results(Simulation_Run_Ptr simulation_run)
 	 1e3*data->accumulated_delay/data->number_of_packets_processed);
 
   // output for #5
-  //printf("Transmitted data packet count  = %ld \n",
-	  //data->number_of_data_packets_processed);
+  printf("Transmitted data packet count  = %ld \n",
+	  data->number_of_data_packets_processed);
   
- // printf("Transmitted voice 1 packet count  = %ld \n",
-	 // data->number_of_voice_packets_processed);
+  printf("Transmitted voice 1 packet count  = %ld \n",
+	  data->number_of_voice_packets_processed);
   
-  //printf("Transmitted voice 2 packet count  = %ld \n",
-	 // data->number_of_voice_2_packets_processed);
+  printf("Transmitted voice 2 packet count  = %ld \n",
+	  data->number_of_voice_2_packets_processed);
 
   printf("Data Packet Mean Delay (msec) = %.2f \n",
 		1e3*data->data_packet_accumulated_delay/data->number_of_data_packets_processed);

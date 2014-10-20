@@ -38,11 +38,12 @@ void
 cleanup_memory (Simulation_Run_Ptr simulation_run)
 {
   Simulation_Run_Data_Ptr data;
-  Fifoqueue_Ptr buffer;
+  Fifoqueue_Ptr buffer, voice_buffer;
   Server_Ptr link;
 
   data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
   buffer = data->buffer;
+  voice_buffer = data->voice_buffer;
   link = data->link;
 
   if(link->state == BUSY) /* Clean out the server. */
@@ -52,6 +53,10 @@ cleanup_memory (Simulation_Run_Ptr simulation_run)
   while (fifoqueue_size(buffer) > 0) /* Clean out the queue. */
     xfree(fifoqueue_get(buffer));
   xfree(buffer);
+
+  while (fifoqueue_size(voice_buffer) > 0) /* Clean out the voice queue. */
+    xfree(fifoqueue_get(voice_buffer));
+  xfree(voice_buffer);
 
   xfree(data); /* Clean up the simulation_run data. */
 
