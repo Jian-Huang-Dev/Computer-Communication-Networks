@@ -33,6 +33,7 @@
 #include "simlib.h"
 
 /*******************************************************************************/
+extern int NUMBER_OF_CHANNELS, Call_ARRIVALRATE;
 
 typedef Server Channel;
 typedef Server_Ptr Channel_Ptr;

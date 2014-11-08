@@ -78,6 +78,8 @@ void output_results(Simulation_Run_Ptr this_simulation_run)
 
   printf("Blocking probability = %.5f (Service fraction = %.5f)\n",
 	 1-xmtted_fraction, xmtted_fraction);
+  printf("Number of Channels = %d\n", NUMBER_OF_CHANNELS);
+  printf("Offered Load A = %.0f\n", (double)Call_ARRIVALRATE * (double)MEAN_CALL_DURATION);
 
   printf("\n");
 }
