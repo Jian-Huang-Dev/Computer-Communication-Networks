@@ -1,4 +1,4 @@
-
+﻿
 /*
  * 
  * Call Blocking in Circuit Switched Networks
@@ -30,14 +30,15 @@
 
 /*******************************************************************************/
 
-#define Call_ARRIVALRATE 3   /* calls/minute */
-#define MEAN_CALL_DURATION 3 /* minutes */
+#define NUMBER_OF_ARRIVAL_RATES 1//,0.667,1,1.333,1.667,2,2.333,2.667,3,3.333  /* calls/second */
+#define MEAN_CALL_DURATION 3 /* seconds */
 #define RUNLENGTH 5e6 /* number of successful calls */
 #define BLIPRATE 1e3
-#define NUMBER_OF_CHANNELS 11
+#define NUMBER_OF_CHANNELS 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
+#define MEAN_WAITING_TIME 80
 
 /* Comma separated list of random seeds to run. */
-#define RANDOM_SEED_LIST 333, 4444, 55555
+#define RANDOM_SEED_LIST 333//, 4444, 55555, 1073196, 951321
 
 /*******************************************************************************/
 

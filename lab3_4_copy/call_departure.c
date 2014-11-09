@@ -63,6 +63,7 @@ void
 end_call_on_channel_event(Simulation_Run_Ptr simulation_run, void * c_ptr)
 {
   Call_Ptr this_call;
+  Call_Ptr next_call;
   Channel_Ptr channel;
   Simulation_Run_Data_Ptr sim_data;
   double now;
@@ -81,6 +82,39 @@ end_call_on_channel_event(Simulation_Run_Ptr simulation_run, void * c_ptr)
   sim_data->accumulated_call_time += now - this_call->arrive_time;
 
   output_progress_msg_to_screen(simulation_run);
+
+  //check queue for waiting calls
+  if (fifoqueue_size(sim_data->fifo_queue) > 0){
+
+	  /*take a call out of the queue to the free channel*/
+	  next_call = (Call_Ptr)fifoqueue_get(sim_data->fifo_queue);
+
+	  while (next_call->arrive_time + next_call->waiting_time < now){
+		  sim_data->number_of_calls_hanged_up += 1;
+
+		  if (fifoqueue_size(sim_data->fifo_queue) > 0){
+
+			  next_call = (Call_Ptr)fifoqueue_get(sim_data->fifo_queue);
+			  //new_call->got_call_from_queue = 1;
+		  }
+		  else{
+			 // /*found out all the calls in the queue are dropped*/
+			  next_call = NULL;
+			  break;
+
+		  }
+	  }
+
+	  if (next_call != NULL){
+
+		  sim_data->accumulated_waiting_time += now - next_call->arrive_time;
+		  server_put(channel, (void*)next_call);
+		  next_call->channel = channel;
+		  schedule_end_call_on_channel_event(simulation_run,
+			  now + next_call->call_duration,
+			  (void *)channel);
+	  }
+  }
 
   /* This call is done. */
   xfree((void*) this_call);

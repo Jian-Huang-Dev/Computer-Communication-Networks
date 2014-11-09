@@ -43,7 +43,10 @@ typedef struct _call_
 {
   double arrive_time;
   double call_duration;
+  double waiting_time;
   Channel_Ptr channel;
+
+  int got_call_from_queue;
 } Call, * Call_Ptr;
 
 typedef struct _simulation_run_data_
@@ -52,10 +55,18 @@ typedef struct _simulation_run_data_
   long int blip_counter;
   long int call_arrival_count;
   long int calls_processed;
-  long int blocked_call_count;
+  long int number_of_calls_in_queue;
   long int number_of_calls_processed;
   double accumulated_call_time;
   unsigned random_seed;
+  
+  double arrival_rate;
+  int number_of_channels;
+
+  Fifoqueue_Ptr fifo_queue;
+  long int number_of_calls_hanged_up;
+  double accumulated_waiting_time;
+
 } Simulation_Run_Data, * Simulation_Run_Data_Ptr;
 
 /*******************************************************************************/
@@ -65,6 +76,10 @@ typedef struct _simulation_run_data_
  */
 
 extern int main(void);
+
+
+int
+is_all_channel_free(Simulation_Run_Ptr);
 
 /*******************************************************************************/
 

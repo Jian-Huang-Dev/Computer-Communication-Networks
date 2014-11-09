@@ -37,14 +37,24 @@ void cleanup (Simulation_Run_Ptr this_simulation_run)
   int i;
   Simulation_Run_Data_Ptr sim_data;
 
+  Fifoqueue_Ptr queue;
+
   sim_data = (Simulation_Run_Data_Ptr) simulation_run_data(this_simulation_run);
+  queue = sim_data->fifo_queue;
 
   /* Clean out the channels. */
-  for (i=0; i<NUMBER_OF_CHANNELS; i++) {
+  for (i=0; i<sim_data->number_of_channels; i++) {
     if( (*(sim_data->channels+i))->state == BUSY)
       xfree(server_get(*(sim_data->channels+i)));
   }
   xfree(sim_data->channels);
+
+
+  /*clean up the fifo queue*/
+
+   while (fifoqueue_size(queue) > 0) /* Clean out the queue. */
+    xfree(fifoqueue_get(queue));
+  xfree(queue);
 
   /* Clean up the simulation_run. */
   simulation_run_free_memory(this_simulation_run);
