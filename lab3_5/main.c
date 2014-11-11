@@ -37,7 +37,7 @@
 
 /*******************************************************************************/
 int retry = 0;
-int MY_CALL_WAIT_TIME = 15;
+int MY_CALL_WAIT_TIME = 0;
 
 int main(void)
 {
