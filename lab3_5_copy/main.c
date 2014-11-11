@@ -74,6 +74,9 @@ int main(void)
     data.accumulated_call_time = 0.0;
     data.random_seed = random_seed;
 
+	data.total_retry_count = 0;
+	data.total_retry_blocked_count = 0;
+
     /* Create the channels. */
     data.channels = (Channel_Ptr *) xcalloc((int) NUMBER_OF_CHANNELS,
 					    sizeof(Channel_Ptr));
@@ -91,6 +94,12 @@ int main(void)
 			simulation_run_get_time(simulation_run) +
 			exponential_generator((double) 1/Call_ARRIVALRATE));
     
+	schedule_my_personal_call_arrival_event(simulation_run,
+			simulation_run_get_time(simulation_run) +
+			exponential_generator((double) 1/Call_ARRIVALRATE));
+    
+
+
     /* Execute events until we are finished. */
     while(data.number_of_calls_processed < RUNLENGTH) {
       simulation_run_execute_event(simulation_run);

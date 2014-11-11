@@ -36,6 +36,9 @@
 #define BLIPRATE 1e3
 #define NUMBER_OF_CHANNELS 11
 
+#define RETRY_TIME 2 /*mins*/
+#define PERSONAL_CALL_TIME 4
+
 /* Comma separated list of random seeds to run. */
 #define RANDOM_SEED_LIST 333, 4444, 55555
 

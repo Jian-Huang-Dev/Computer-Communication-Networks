@@ -56,6 +56,10 @@ typedef struct _simulation_run_data_
   long int number_of_calls_processed;
   double accumulated_call_time;
   unsigned random_seed;
+
+  long int total_retry_count;
+  long int total_retry_blocked_count;
+
 } Simulation_Run_Data, * Simulation_Run_Data_Ptr;
 
 /*******************************************************************************/

@@ -52,6 +52,32 @@ schedule_call_arrival_event(Simulation_Run_Ptr simulation_run,
   return simulation_run_schedule_event(simulation_run, new_event, event_time);
 }
 
+long int
+schedule_my_personal_call_arrival_event(Simulation_Run_Ptr simulation_run, 
+			    double event_time)
+{
+  Event new_event;
+
+  new_event.description = "Personal call Arrival";
+  new_event.function = my_personal_call_arrival_event;
+  new_event.attachment = NULL;
+
+  return simulation_run_schedule_event(simulation_run, new_event, event_time);
+}
+
+long int 
+schedule_retry_call_event(Simulation_Run_Ptr simulation_run, 
+			    double event_time, void* call)
+{
+  Event new_event;
+
+  new_event.description = "Personal retry call Arrival";
+  new_event.function = my_personal_retry_call_arrival_event;
+  new_event.attachment = call;
+
+  return simulation_run_schedule_event(simulation_run, new_event, event_time);
+}
+
 /*******************************************************************************/
 
 /*
@@ -93,6 +119,94 @@ call_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
   schedule_call_arrival_event(simulation_run,
 	      now + exponential_generator((double) 1/Call_ARRIVALRATE));
 }
+
+
+/*******************************************************************************/
+
+/*
+ * My Personal Call arrival event function.
+ */
+
+void
+my_personal_call_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
+{
+  Call_Ptr new_call;
+  Channel_Ptr free_channel;
+  Simulation_Run_Data_Ptr sim_data;
+  double now;
+
+  now = simulation_run_get_time(simulation_run);
+
+  sim_data = simulation_run_data(simulation_run);
+  sim_data->call_arrival_count++;
+
+  new_call = (Call_Ptr) xmalloc(sizeof(Call));
+
+  if((free_channel = get_free_channel(simulation_run)) != NULL) {
+
+    /* Start the call. */
+    
+    new_call->arrive_time = now;
+    new_call->call_duration = get_call_duration();
+
+    server_put(free_channel, (void*) new_call);
+    new_call->channel = free_channel;
+
+    schedule_end_call_on_channel_event(simulation_run,
+				       now + new_call->call_duration,
+				       (void *) free_channel);
+
+	
+  /* Schedule the next personal call arrival. */
+  schedule_my_personal_call_arrival_event(simulation_run,
+	      now + exponential_generator((double) PERSONAL_CALL_TIME));
+
+  } else {
+    /* The call was blocked. */
+	/*setup for retry*/
+    sim_data->total_retry_count++;
+	schedule_retry_call_event(simulation_run,
+	      now + RETRY_TIME, (void *) new_call);
+  }
+
+}
+
+void
+my_personal_retry_call_arrival_event(Simulation_Run_Ptr simulation_run, void * call_ptr)
+{
+  Call_Ptr new_call;
+  Channel_Ptr free_channel;
+  Simulation_Run_Data_Ptr sim_data;
+  double now;
+
+  now = simulation_run_get_time(simulation_run);
+
+  sim_data = simulation_run_data(simulation_run);
+  sim_data->call_arrival_count++;
+
+  if((free_channel = get_free_channel(simulation_run)) != NULL) {
+
+    /* Start the call. */
+    new_call = (Call_Ptr) call_ptr;
+    new_call->arrive_time = now;
+    new_call->call_duration = get_call_duration();
+
+    server_put(free_channel, (void*) new_call);
+    new_call->channel = free_channel;
+
+    schedule_end_call_on_channel_event(simulation_run,
+				       now + new_call->call_duration,
+				       (void *) free_channel);
+  } else {
+    /* The call was blocked on the retry */
+    sim_data->total_retry_blocked_count++;
+  }
+
+  /* Schedule the next personal call arrival. */
+  schedule_my_personal_call_arrival_event(simulation_run,
+	      now + exponential_generator((double) PERSONAL_CALL_TIME));
+}
+
 
 /*******************************************************************************/
 

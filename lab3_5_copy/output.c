@@ -79,6 +79,13 @@ void output_results(Simulation_Run_Ptr this_simulation_run)
   printf("Blocking probability = %.5f (Service fraction = %.5f)\n",
 	 1-xmtted_fraction, xmtted_fraction);
 
+  
+  printf("retry waiting time = %ld \n", RETRY_TIME);
+  printf("retry count = %ld \n", sim_data->total_retry_count);
+  printf("blocked retry count = %ld \n", sim_data->total_retry_blocked_count);
+  printf("blocked retry prbability = %.5f \n", (double) sim_data->total_retry_blocked_count / sim_data->total_retry_count);
+  
+
   printf("\n");
 }
 
