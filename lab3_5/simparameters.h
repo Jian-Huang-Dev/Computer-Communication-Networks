@@ -35,9 +35,11 @@
 #define RUNLENGTH 5e6 /* number of successful calls */
 #define BLIPRATE 1e3
 #define NUMBER_OF_CHANNELS 11
+#define MY_CALL_ARRIVALRATE 3 /*minutes, Tc*/
+//#define MY_CALL_WAIT_TIME 1, 5, 10, 15, 20 /*minutes, Tr*/
 
 /* Comma separated list of random seeds to run. */
-#define RANDOM_SEED_LIST 333, 4444, 55555
+#define RANDOM_SEED_LIST 1061556
 
 /*******************************************************************************/
 

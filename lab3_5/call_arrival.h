@@ -46,8 +46,14 @@ get_free_channel(Simulation_Run_Ptr);
 void
 call_arrival_event(Simulation_Run_Ptr, void *);
 
+void
+my_call_arrival_event(Simulation_Run_Ptr, void *);
+
 long int
 schedule_call_arrival_event(Simulation_Run_Ptr, double);
+
+long int
+schedule_my_call_arrival_event(Simulation_Run_Ptr, double);
 
 /*******************************************************************************/
 

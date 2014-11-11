@@ -33,16 +33,20 @@
 #include "simlib.h"
 
 /*******************************************************************************/
+extern int retry;
+extern int MY_CALL_WAIT_TIME;
 
 typedef Server Channel;
 typedef Server_Ptr Channel_Ptr;
 
 typedef enum {XMTTING, WAITING} Call_Status;
+//typedef enum { FIRSTTRY, RETRY } Call_attempt;
 
 typedef struct _call_
 {
   double arrive_time;
   double call_duration;
+  //Call_attempt attempt;
   Channel_Ptr channel;
 } Call, * Call_Ptr;
 
@@ -51,8 +55,11 @@ typedef struct _simulation_run_data_
   Channel_Ptr * channels;
   long int blip_counter;
   long int call_arrival_count;
+  long int my_call_arrival_count;
+  long int retry_arrival_count;
   long int calls_processed;
   long int blocked_call_count;
+  long int blocked_retry_count;
   long int number_of_calls_processed;
   double accumulated_call_time;
   unsigned random_seed;

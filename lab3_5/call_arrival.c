@@ -52,6 +52,20 @@ schedule_call_arrival_event(Simulation_Run_Ptr simulation_run,
   return simulation_run_schedule_event(simulation_run, new_event, event_time);
 }
 
+long int
+schedule_my_call_arrival_event(Simulation_Run_Ptr simulation_run,
+double event_time)
+{
+	//printf("schedule my_call_arrival_event");
+	Event new_event;
+
+	new_event.description = "My Packet Arrival";
+	new_event.function = my_call_arrival_event;
+	new_event.attachment = NULL;
+
+	return simulation_run_schedule_event(simulation_run, new_event, event_time);
+}
+
 /*******************************************************************************/
 
 /*
@@ -92,6 +106,69 @@ call_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
   /* Schedule the next call arrival. */
   schedule_call_arrival_event(simulation_run,
 	      now + exponential_generator((double) 1/Call_ARRIVALRATE));
+}
+
+void
+my_call_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
+{
+	Call_Ptr new_call;
+	Channel_Ptr free_channel;
+	Simulation_Run_Data_Ptr sim_data;
+	double now, end_time = 0;
+
+	now = simulation_run_get_time(simulation_run);
+	//end_time = simulation_run_get_time(simulation_run) + (double)MY_CALL_WAIT_TIME;
+
+	sim_data = simulation_run_data(simulation_run);
+	sim_data->my_call_arrival_count++;
+
+	new_call = (Call_Ptr)xmalloc(sizeof(Call));
+	new_call->arrive_time = now;
+	new_call->call_duration = get_call_duration();
+
+	//retry = o -> first attemp, retry = 1-> second attempt
+	if (retry == 0) {
+		if ((free_channel = get_free_channel(simulation_run)) != NULL) {
+			retry = 0;
+			/* Start the call. */
+			server_put(free_channel, (void*)new_call);
+			new_call->channel = free_channel;
+
+			schedule_end_call_on_channel_event(simulation_run,
+				now + new_call->call_duration,
+				(void *)free_channel);
+
+			/* Schedule the next call arrival. */
+			schedule_my_call_arrival_event(simulation_run,
+				now + exponential_generator((double)MY_CALL_ARRIVALRATE));
+		}
+		else {//retry
+			sim_data->retry_arrival_count++;
+			retry = 1;
+			/* Schedule the next call arrival. */
+			schedule_my_call_arrival_event(simulation_run,
+				now + exponential_generator((double)MY_CALL_WAIT_TIME));
+		}
+	}
+	else if (retry == 1) {
+		if ((free_channel = get_free_channel(simulation_run)) != NULL) {
+			retry = 0;
+			/* Start the call. */
+			server_put(free_channel, (void*)new_call);
+			new_call->channel = free_channel;
+
+			schedule_end_call_on_channel_event(simulation_run,
+				now + new_call->call_duration,
+				(void *)free_channel);
+		}
+		else {
+			sim_data->blocked_retry_count++;
+			retry = 0;
+		}
+
+		schedule_my_call_arrival_event(simulation_run,
+			now + exponential_generator((double)MY_CALL_ARRIVALRATE));
+	}
 }
 
 /*******************************************************************************/

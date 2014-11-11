@@ -70,14 +70,25 @@ void output_results(Simulation_Run_Ptr this_simulation_run)
   printf("\n");
 
   printf("random seed = %d \n", sim_data->random_seed);
-  printf("call arrival count = %ld \n", sim_data->call_arrival_count);
-  printf("blocked call count = %ld \n", sim_data->blocked_call_count);
+  //printf("call arrival count = %ld \n", sim_data->call_arrival_count);
+  printf("MY call arrival count = %ld \n", sim_data->my_call_arrival_count);
+  //printf("blocked call count = %ld \n", sim_data->blocked_call_count);
+  printf("blocked MY call count = %ld \n", sim_data->blocked_retry_count);
+  printf("MY call retry count = %ld \n", sim_data->retry_arrival_count);
+  printf("MY call wait time = %ld \n", MY_CALL_WAIT_TIME);
 
+  //xmtted_fraction = (double)(sim_data->my_call_arrival_count -
+	  //sim_data->blocked_my_call_count) / sim_data->my_call_arrival_count;
+
+  printf("My blocking probability = %.5f\n", (double)sim_data->blocked_retry_count / (double)sim_data->retry_arrival_count);
+
+  /*
   xmtted_fraction = (double) (sim_data->call_arrival_count -
       sim_data->blocked_call_count)/sim_data->call_arrival_count;
 
   printf("Blocking probability = %.5f (Service fraction = %.5f)\n",
 	 1-xmtted_fraction, xmtted_fraction);
+	 */
 
   printf("\n");
 }
