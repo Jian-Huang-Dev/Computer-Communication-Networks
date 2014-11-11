@@ -37,7 +37,7 @@
 
 /*******************************************************************************/
 int retry = 0;
-int MY_CALL_WAIT_TIME = 0;
+int MY_CALL_WAIT_TIME = 15;
 
 int main(void)
 {
@@ -59,7 +59,7 @@ int main(void)
    * simulation_run run for each.
    */
 
-  while (MY_CALL_WAIT_TIME <= 20) {
+  while (MY_CALL_WAIT_TIME <= 30) {
 	  //while ((random_seed = RANDOM_SEEDS[j++]) != 0) {
 	  random_seed = RANDOM_SEEDS[0];
 		  /* Create a new simulation_run. This gives a clock and eventlist. */

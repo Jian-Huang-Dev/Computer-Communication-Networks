@@ -147,7 +147,7 @@ my_call_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
 			retry = 1;
 			/* Schedule the next call arrival. */
 			schedule_my_call_arrival_event(simulation_run,
-				now + exponential_generator((double)MY_CALL_WAIT_TIME));
+				now + MY_CALL_WAIT_TIME);
 		}
 	}
 	else if (retry == 1) {
