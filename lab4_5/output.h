@@ -35,7 +35,6 @@
 /*
  * Function prototypes
  */
-
 void
 output_blip_to_screen(Simulation_Run_Ptr);
 

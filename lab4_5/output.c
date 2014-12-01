@@ -70,28 +70,31 @@ void output_results(Simulation_Run_Ptr this_simulation_run)
 
   printf("\n");
   printf("Random Seed = %d \n", sim_data->random_seed);
-  printf("Pkt Arrivals = %ld \n", sim_data->arrival_count);
+  //printf("Pkt Arrivals = %ld \n", sim_data->arrival_count);
+  printf("Arrival Rate = %3f \n", PACKET_ARRIVAL_RATE);
+  printf("Number of Stations = %d \n", NUMBER_OF_STATIONS);
+  printf("Mean BackOff Duration = %d \n", MEAN_BACKOFF_DURATION);
 
   xmtted_fraction = (double) sim_data->number_of_packets_processed /
     sim_data->arrival_count;
 
-  printf("Xmtted Pkts  = %ld (Service Fraction = %.5f)\n",
-	 sim_data->number_of_packets_processed, xmtted_fraction);
-
-  printf("Mean Delay   = %.1f \n",
+  //printf("Xmtted Pkts  = %ld (Service Fraction = %.5f)\n",
+	// sim_data->number_of_packets_processed, xmtted_fraction);
+  //Mean Delay   = %.1f 
+  printf("%.1f \n",
 	 sim_data->accumulated_delay/sim_data->number_of_packets_processed);
 
-  printf("Mean collisions per packet = %.3f\n",
-	 (double) sim_data->number_of_collisions / 
-	 sim_data->number_of_packets_processed);
+  //printf("Mean collisions per packet = %.3f\n",
+	 //(double) sim_data->number_of_collisions / 
+	 //sim_data->number_of_packets_processed);
 
-  for(i=0; i<NUMBER_OF_STATIONS; i++) {
+  /*for(i=0; i<NUMBER_OF_STATIONS; i++) {
 
     printf("Station %2i Mean Delay = %8.1f \n", i,
 	   (sim_data->stations+i)->accumulated_delay / 
 	   (sim_data->stations+i)->packet_count);
-  }
-  printf("\n\n");
+  }*/
+  printf("\n");
 }
 
 

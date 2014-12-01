@@ -90,6 +90,7 @@ typedef struct _simulation_run_data_
 /*
  * Function prototypes
  */
+extern double PACKET_ARRIVAL_RATE;
 
 int
 main(void);

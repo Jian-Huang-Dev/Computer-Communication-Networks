@@ -27,15 +27,16 @@
 
 /*******************************************************************************/
 
-#define NUMBER_OF_STATIONS 10
-#define PACKET_ARRIVAL_RATE 0.1
+#define NUMBER_OF_STATIONS 50
+//#define PACKET_ARRIVAL_RATE 0.1
 #define MEAN_PACKET_DURATION 1
-#define MEAN_BACKOFF_DURATION 10
+#define MEAN_BACKOFF_DURATION 50
 #define RUNLENGTH 5000000
-#define BLIPRATE 100000
+//#define RUNLENGTH 2000000
+#define BLIPRATE 10000
 
 /* Comma separated list of random seeds to run. */
-#define RANDOM_SEED_LIST 222222, 333333
+#define RANDOM_SEED_LIST 1061556//,1069639
 
 /*******************************************************************************/
 
