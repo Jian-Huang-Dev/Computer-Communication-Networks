@@ -50,7 +50,7 @@ main(void)
   /* Do a new simulation_run for each random number generator seed. */
 	  //j = 0; //re-set random_seed index
 	  while ((random_seed = RANDOM_SEEDS[j++]) != 0){ 
-		  PACKET_ARRIVAL_RATE = 0.09;
+		  PACKET_ARRIVAL_RATE = 0.01;
 		  while (PACKET_ARRIVAL_RATE <= 0.2) {
 
 		  /* Set the random generator seed. */

@@ -36,7 +36,7 @@
 #define BLIPRATE 10000
 
 /* Comma separated list of random seeds to run. */
-#define RANDOM_SEED_LIST 1061556//,1069639
+#define RANDOM_SEED_LIST 1061556, 1069639
 
 /*******************************************************************************/
 
