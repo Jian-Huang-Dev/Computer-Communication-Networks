@@ -27,10 +27,12 @@
 
 /*******************************************************************************/
 
-#define NUMBER_OF_STATIONS 50
+#define EPSILON 0.0001
+
+#define NUMBER_OF_STATIONS 10
 //#define PACKET_ARRIVAL_RATE 0.1
 #define MEAN_PACKET_DURATION 1
-#define MEAN_BACKOFF_DURATION 50
+//#define MEAN_BACKOFF_DURATION 50
 #define RUNLENGTH 5000000
 //#define RUNLENGTH 2000000
 #define BLIPRATE 10000

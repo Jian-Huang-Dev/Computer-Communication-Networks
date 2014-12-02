@@ -75,7 +75,7 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void* dummy_ptr)
      queue either way. */
   if(fifoqueue_size(buffer) == 1) {
     /* Transmit the packet. */
-    schedule_transmission_start_event(simulation_run, now, (void *) new_packet);
+    schedule_transmission_start_event(simulation_run, ceil(now) + (double)EPSILON, (void *) new_packet);
   }
 
   /* Schedule the next packet arrival. */

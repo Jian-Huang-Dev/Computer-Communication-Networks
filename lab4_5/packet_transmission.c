@@ -70,7 +70,7 @@ transmission_start_event(Simulation_Run_Ptr simulation_run, void * ptr)
   /* Schedule the end of packet transmission event. */
   schedule_transmission_end_event(simulation_run,
 				  simulation_run_get_time(simulation_run) + 
-				  this_packet->service_time,
+				  this_packet->service_time - (2.*EPSILON),
 				  (void *) this_packet);
 }
 
@@ -140,7 +140,7 @@ transmission_end_event(Simulation_Run_Ptr simulation_run, void * packet)
       next_packet = fifoqueue_see_front(buffer);
 
       schedule_transmission_start_event(simulation_run,
-					now,
+					ceil(now) + (double)EPSILON,
 					(void*) next_packet);
     }
 
@@ -164,7 +164,7 @@ transmission_end_event(Simulation_Run_Ptr simulation_run, void * packet)
 	backoff_duration = uniform_generator() * pow(2.0, this_packet->collision_count);
 
     schedule_transmission_start_event(simulation_run,
-				      now + backoff_duration,
+				      ceil(now + backoff_duration) + (double)EPSILON,
 				      (void *) this_packet);
   }
 

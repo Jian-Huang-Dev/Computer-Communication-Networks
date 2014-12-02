@@ -73,7 +73,7 @@ void output_results(Simulation_Run_Ptr this_simulation_run)
   //printf("Pkt Arrivals = %ld \n", sim_data->arrival_count);
   printf("Arrival Rate = %3f \n", PACKET_ARRIVAL_RATE);
   printf("Number of Stations = %d \n", NUMBER_OF_STATIONS);
-  printf("Mean BackOff Duration = %d \n", MEAN_BACKOFF_DURATION);
+  //printf("Mean BackOff Duration = %d \n", MEAN_BACKOFF_DURATION);
 
   xmtted_fraction = (double) sim_data->number_of_packets_processed /
     sim_data->arrival_count;
